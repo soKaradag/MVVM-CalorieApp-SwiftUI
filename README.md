@@ -2,7 +2,7 @@
 Save data with UserDefaults and calculate macros.
 
 
-Screen Shots:
+Screen Records:
 
 https://user-images.githubusercontent.com/98060048/210078265-fdd74a9c-97d3-4efd-a64b-3b998452cd56.mov
 
