@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @StateObject var FVM = foodViewModel()
+    @EnvironmentObject var VM: foodViewModel
     
     @State private var name = ""
     @State private var calorie = 0.00
@@ -49,7 +49,7 @@ struct ContentView: View {
                             .padding()
                             Button("ADD FOOD", action: {
                                 addFood()
-                                FVM.save()
+                                VM.save()
                                 name = ""
                                 calorie = 0.00
                                 protein = 0.00
@@ -67,30 +67,7 @@ struct ContentView: View {
                             Spacer()
                             //Mark: Header Link
                             NavigationLink {
-                                ScrollView {
-                                    VStack(alignment: .leading){
-                                        ForEach($FVM.foodList) { $Food in
-                                            
-                                            HStack{
-                                                VStack(alignment: .leading) {
-                                                    Text(Food.name)
-                                                    Text("Calorie: \(Int(Food.calorie)) kcal")
-                                                    Text("Protein: \(Int(Food.protein)) gr")
-                                                    Text("Carb: \(Int(Food.carb)) gr")
-                                                }
-                                                
-                                                Spacer()
-                                                
-                                                VStack(alignment: .leading) {
-                                                    Text("Date:")
-                                                    Text("\(Food.date, format: .dateTime.day().month().year())")
-                                                }
-                                            }
-                                            .padding()
-                                            
-                                        }
-                                    }
-                                }
+                                RecentFoodView()
                             } label: {
                                 HStack(spacing: 4) {
                                     Text("See All")
@@ -100,7 +77,7 @@ struct ContentView: View {
                         }
                         .padding(.top)
                         
-                        ForEach(FVM.foodList.prefix(5)) { Food in
+                        ForEach(VM.foodList.prefix(6)) { Food in
                             
                             HStack{
                                 VStack(alignment: .leading) {
@@ -146,8 +123,8 @@ struct ContentView: View {
     
     
     func addFood() {
-        FVM.foodList.append(Food(name: name, calorie: Float(calorie), protein: Float(protein), carb: Float(carb)))
-        FVM.foodList.sort{ $0.date > $1.date }
+        VM.foodList.append(Food(name: name, calorie: Float(calorie), protein: Float(protein), carb: Float(carb)))
+        VM.foodList.sort{ $0.date > $1.date }
     }
     
 }
@@ -155,5 +132,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(foodViewModel())
     }
 }
